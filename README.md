@@ -11,6 +11,7 @@
 </li></p>
 <p><li><b>MAXIMUM LIKELIHOOD</b> - <i>Maxmium Likelihood Pitch Estimation</i> - James D.Wise, James R.Caprio, Thomas W.Parks - 
 <i>IEEE Transactions on Acoustics, Speech and Signal Processing, 1976.</i></li><p>
+<li><b>EXTENDED KALMAN FILTER</b> - <i>Real-time Pitch Tracking in Audio Signals with the Extended Complex Kalman Filter </i> - Orchisama Das, Julius O. Smith, Chris Chafe - <i>to appear in Digital Audio Effects Conference (DAFx 2017) .</i></li></p>
 </ul>
 
 The algorithms have been tested successfully on a number of cello recordings downloaded from <a href = "http://theremin.music.uiowa.edu/MIS.html#">

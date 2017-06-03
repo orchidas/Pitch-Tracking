@@ -3,6 +3,12 @@ function [ time, f0 ] = cepstrum(x,fs,varargin)
 %based on paper Cepstrum pitch detection
 %by A. Michael Noll
 
+%convert column vector to row vector
+if(size(x,1) > 2)
+    x = x';
+    x = x(:,1);
+end
+
 %compute blockwise spectrum
 win = round(0.04 * fs);
 hop = round(0.01 * fs);
