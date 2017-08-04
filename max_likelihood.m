@@ -1,9 +1,11 @@
 function [time, f0] = max_likelihood(x,fs, varargin)
+
 %maximum likelihood pitch estimator based on the paper by
 %James D Wise published in 1976
 
 %they chose K0 = 384 because They assume minimum fundamental
 %frequency to be 8450/384 = 22Hz. Their sampling frequency was 8450
+
 K0 = round(fs/50);
 hop = round(K0/4);
 n = length(x);

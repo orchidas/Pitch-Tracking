@@ -1,4 +1,5 @@
 function [time, f0] = yin_estimator(x, fs, varargin)
+
 %function that implements YIN algorithm for
 %fundamental pitch tracking
 %x - input audio signal
@@ -81,7 +82,6 @@ for i = 1:nframes
     %1 needs to be subtracted from 1 due to matlab's indexing nature
     period(i) = (lag(i)-1) + peak;
     f0(i,:) = fs/period(i)*ones(1,win);
-    %time(i,:) = (i-1)*win/fs;
     time(i,:) = ((i-1)*win:i*win-1)/fs;
     
 end

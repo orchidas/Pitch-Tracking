@@ -58,7 +58,7 @@ for i = 1:nframes
     %restrict peak limits to 1-20ms
     ceps_scaled(i,:) = ceps(i,q_min:q_max);
    
-    %plot cepstrum
+%    %plot cepstrum
 %     if(i == 1)
 %     figure(1);
 %     mat_ceps(i,:) = cceps(x_win,nfft);
