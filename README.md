@@ -1,7 +1,4 @@
-
-<h1>Pitch tracking algorithms in MATLAB</h1>
-
-<h3>Implementation of very standard fundamental frequency tracking algorithms</h3> (with some modifications)
+<h1>Pitch detection algorithms in MATLAB</h1>
 
 <h4>Methods implemented:</h4>
 <ul>
@@ -11,8 +8,11 @@
 </li></p>
 <p><li><b>MAXIMUM LIKELIHOOD</b> - <i>Maxmium Likelihood Pitch Estimation</i> - James D.Wise, James R.Caprio, Thomas W.Parks - 
 <i>IEEE Transactions on Acoustics, Speech and Signal Processing, 1976.</i></li><p>
-<li><b>EXTENDED KALMAN FILTER</b> - <i>Real-time Pitch Tracking in Audio Signals with the Extended Complex Kalman Filter </i> - Orchisama Das, Julius O. Smith, Chris Chafe - <i>to appear in Digital Audio Effects Conference (DAFx 2017) .</i></li></p>
+<li><b>EXTENDED KALMAN FILTER</b> - <i>Real-time Pitch Tracking in Audio Signals with the Extended Complex Kalman Filter </i> - Orchisama Das, Julius O. Smith, Chris Chafe - to appear in <i> Digital Audio Effects Conference (DAFx 2017) .</i></li></p>
 </ul>
-
+<p>
 The algorithms have been tested successfully on a number of cello recordings downloaded from <a href = "http://theremin.music.uiowa.edu/MIS.html#">
-this</a> link.
+this</a> link.</p>
+<p>
+This <a href = https://github.com/orchidas/Pitch-Tracking/tree/master/eckf_pitch_final>subfolder</a> contains programs that employ the Extended Kalman Filter in Pitch Tracking. The ECKF performs sample-synchronous pitch tracking, unlike the other algorithms that perform block based pitch detection. This is a novel algorithm to be published in the proceedings of DAFx. The paper will be uploaded soon. 
+</p>
