@@ -1,4 +1,4 @@
-function [silent] = is_silent(x)
+function [silent, spectral_flatness] = is_silent(x)
 %silent frame classification in music 
 
 %method for clean signal - calculate signal energy and see if it is below
@@ -14,7 +14,7 @@ energy = 20*log10(sum(x.^2));
 %the spectral flatness method works only if signal is noisy
 spectral_flatness = geomean(psdw)/mean(psdw);
 
-threshold = 0.9;
+threshold = 0.45;
 silent = spectral_flatness >= threshold | energy < -50;
 end
 

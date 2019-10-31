@@ -120,6 +120,10 @@ while(start + flength - 1 < length(y))
             P_last = P0;
             x_last = x0;
             flag = 0;
+            %backwards filtering - this demands a look-ahead of
+            %numBuffersToWait
+            start = start - count*flength;
+            n = start;
         end
     end
     
