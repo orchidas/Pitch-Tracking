@@ -81,7 +81,7 @@ while(start + flength - 1 < length(y))
         minf = length(ybuf);
         nfft = 2^nextpow2(4*minf);
         fbins = linspace(-fs/2,fs/2,nfft+1);
-        win = blackman(minf);
+        win = poisson_window(minf,20);
         ybuf = (ybuf - mean(ybuf)).* win';
         Y = fftshift(fft(ybuf, nfft));
         %considering minimum possible frequency to be 50Hz, we ignore all
@@ -151,3 +151,6 @@ end
 
 end
 
+function w = poisson_window (M, alpha)
+    w = exp(-0.5*alpha*(0:M-1)./(M-1))';
+end
