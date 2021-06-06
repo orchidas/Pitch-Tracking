@@ -18,3 +18,10 @@
 The algorithms have been tested successfully on a number of cello recordings downloaded from <a href = "http://theremin.music.uiowa.edu/MIS.html#">
 this</a> link.</p>
 
+<h2> Update, June 2021 </h2>
+<p>A JUCE application implementing the EKF pitch tracker from the DAFx 2017 paper with very basic plotting has now been added. The only external library used is <a href = "https://eigen.tuxfamily.org/index.php?title=Main_Page">Eigen</a> for implementing the Kalman filter. 
+ 
+ TO-DO - Make a plugin
+ 
+ </p>
+
