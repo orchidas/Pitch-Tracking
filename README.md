@@ -1,4 +1,4 @@
-<h1>Pitch detection algorithms in MATLAB</h1>
+<h1>Pitch detection algorithms</h1>
 
 <h4>Methods implemented:</h4>
 <ul>
@@ -14,9 +14,7 @@
   <li> <i> Improved Real-time Monophonic Pitch Tracking with the Extended Complex Kalman Filter </i> -   Orchisama Das, Julius O. Smith, Chris Chafe - <i> Journal of the Audio Engineering Society, Vol 68, No. 1/2, 2020. (<a href = "https://www.aes.org/e-lib/browse.cfm?elib=20719">link</a>).</i></li></ul> 
  </li></p>
 </ul>
-<p>
-The algorithms have been tested successfully on a number of cello recordings downloaded from <a href = "http://theremin.music.uiowa.edu/MIS.html#">
-this</a> link.</p>
+
 
 <h2> Update, June 2021 </h2>
 <p>A JUCE application implementing the EKF pitch tracker from the DAFx 2017 paper with very basic plotting has now been added. The only external library used is <a href = "https://eigen.tuxfamily.org/index.php?title=Main_Page">Eigen</a> for implementing the Kalman filter. 
