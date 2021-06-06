@@ -22,10 +22,10 @@ public:
     ~EKFPitch();
     
     void prepare(float sampleRate, int bufferSize);         //initialize
-    bool detectSilence(float* channelData);                 //detects if current buffer is silent
-    void findInitialPitch(float* channelData);              //initial pitch estimate by FFT peak detection
-    void resetCovarianceMatrix();                           // resent error covariance matrix and re-initialize filter
-    float kalmanFilter(float audioSample);                  // EKF implementation
+    bool detectSilence(const float* channelData);           //detects if current buffer is silent
+    void findInitialPitch(const float* channelData);        //initial pitch estimate by FFT peak detection
+    void resetCovarianceMatrix();                           // resent error covariance matrix and re-initialize                                                         filter
+    float kalmanFilter(const float audioSample);             // EKF implementation
     std::pair<float, float> parabolicInterpolation(
                             float, float, float);           //parabolic interpolation on FFT peak magniutde
     
@@ -36,7 +36,7 @@ public:
 
     
 private:
-    float sampleRate;                            //sample rate
+    float sampleRate;                           //sample rate
     float Ts;                                   //inverse of sampleRate
     const float threshold = -40.0f;             //energy threshold for detecting silence
     const float PI = std::acos(-1);             //pi

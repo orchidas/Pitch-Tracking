@@ -42,14 +42,15 @@ void MainComponent::prepareToPlay (int samplesPerBlockExpected, double sampleRat
 
     // For more details, see the help for AudioProcessor::prepareToPlay()
     
-    this->sampleRate = (float)sampleRate;       //set sample rate
+    this->sampleRate = (float)sampleRate;                       //set sample rate
     ekf.prepare(this->sampleRate, samplesPerBlockExpected);     //prepare pitch tracker
-    prevBufferSilent = true;    //set buffer flag
+    prevBufferSilent = true;                                    //set buffer flag
     nBuffer = 0;
     for(int i = 0; i < scopeSize; i++){
-        pitch[i] = 0.0f;        //make sure initial pitch values are not garbage
+        pitch[i] = 0.0f;                                //make sure initial pitch values are not garbage
     }
 }
+
 
 void MainComponent::getNextAudioBlock (const juce::AudioSourceChannelInfo& bufferToFill)
 {
@@ -63,7 +64,7 @@ void MainComponent::getNextAudioBlock (const juce::AudioSourceChannelInfo& buffe
     
     for (int channel = 0; channel < numInputChannels; ++channel)
     {
-        float* channelData = bufferToFill.buffer->getWritePointer(0, bufferToFill.startSample);
+        const float* channelData = bufferToFill.buffer->getReadPointer(0, bufferToFill.startSample);
         
         //we are dealing with single channel data here for pitch detection
         if (channel == 0){
@@ -79,9 +80,6 @@ void MainComponent::getNextAudioBlock (const juce::AudioSourceChannelInfo& buffe
                 std::cout << "Kalman filter reset" << std::endl;
 
             }
-            
-            //track pitch if buffer is not silent - currently pitch stays at 0,
-            //this should not happen
             
                 
             //update the pitch every 10 samples, otherwise too slow
@@ -136,12 +134,11 @@ void MainComponent::timerCallback(){
 void MainComponent::drawNextFrame() {
     
     
-    for (int i = 0; i < scopeSize; ++i)                         // [3]
+    for (int i = 0; i < scopeSize; ++i)
     {
         //pitch wont exceed half of sample Rate
         float constrainedPitch = juce::jlimit<float>(0.0f, sampleRate/2.0, pitch[i]);
         scopeData[i] = constrainedPitch/(sampleRate/2.0);
-        //std::cout << scopeData[i] << std::endl;
     }
 }
 
@@ -154,14 +151,12 @@ void MainComponent::paint (juce::Graphics& g)
     g.setFont (15.0f);
     
     
-    //y axis (pitch) values between 0 and 5000Hz should fit between height 0 and 300
-    //x-axis values between 0 and 1s need to fit between width 0 and 600
-    
     for (int i = 1; i < scopeSize; ++i)
     {
         auto width  = getLocalBounds().getWidth();
         auto height = getLocalBounds().getHeight();
         
+        //Pitch values should fit within the height of the screen. Use jmap
         //jmap (Type sourceValue, Type sourceRangeMin, Type sourceRangeMax,
         // Type targetRangeMin, Type targetRangeMax)
         g.drawLine ({
