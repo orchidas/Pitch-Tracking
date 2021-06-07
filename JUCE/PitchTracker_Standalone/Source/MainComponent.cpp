@@ -77,16 +77,16 @@ void MainComponent::getNextAudioBlock (const juce::AudioSourceChannelInfo& buffe
             if ((prevBufferSilent && !curBufferSilent)
                 || ((nBuffer >= nBufferToReset) && !curBufferSilent))
             {
-                ekf.findInitialPitch(channelData);
+                ekf.findInitialPitchFFT(channelData);
                 ekf.resetCovarianceMatrix();
                 nBuffer = 0;
-                std::cout << "Kalman filter reset" << std::endl;
+                //std::cout << "Kalman filter reset" << std::endl;
             }
             
-            if (curBufferSilent)
+            /*if (curBufferSilent)
                 std::cout << "silent buffer" << std::endl;
             else
-                std::cout << "not silent" << std::endl;
+                std::cout << "not silent" << std::endl;*/
                 
             //update the pitch every uUpdate samples, otherwise too slow
             for (int i = 0; i < numSamples; i+=nUpdate)
@@ -152,7 +152,7 @@ void MainComponent::drawNextFrame() {
             //pitch wont exceed half of sample Rate
             float constrainedPitch = juce::jlimit<float>(0.0f, sampleRate/2.0, pitch[i]);
             scopeData[i] = constrainedPitch/(sampleRate/2.0);
-            scopeData[i] = constrainedPitch;
+            //scopeData[i] = constrainedPitch;
 
         }
     }
@@ -178,16 +178,16 @@ void MainComponent::paint (juce::Graphics& g)
         g.drawLine ({
             
             //plotting on linear scale
-            (float) juce::jmap (i - 1, 0, scopeSize - 1, 0, width),
+            /*(float) juce::jmap (i - 1, 0, scopeSize - 1, 0, width),
             juce::jmap (scopeData[i-1], 0.0f, (float)maxPitch, (float) height, 0.0f),
             (float) juce::jmap (i, 0, scopeSize - 1, 0, width),
-            juce::jmap (scopeData[i], 0.0f, (float)maxPitch, (float) height, 0.0f)
+            juce::jmap (scopeData[i], 0.0f, (float)maxPitch, (float) height, 0.0f)*/
             
              //normalize pitch values and plot on log scale
-             /*(float) juce::jmap (i - 1, 0, scopeSize - 1, 0, width),
+             (float) juce::jmap (i - 1, 0, scopeSize - 1, 0, width),
              juce::mapToLog10 (scopeData[i-1], (float) height, 1.0f),
              (float) juce::jmap (i, 0, scopeSize - 1, 0, width),
-             juce::mapToLog10 (scopeData[i], (float) height, 1.0f)*/
+             juce::mapToLog10 (scopeData[i], (float) height, 1.0f)
         });
     }
 }

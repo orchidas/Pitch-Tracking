@@ -33,9 +33,9 @@ public:
     {
         pitchSize = 128,        //size of pitch to be stored
         scopeSize = 8192,      //size of data to be displayed
-        nBufferToReset =50,    // reset the filter after these many buffers
+        nBufferToReset = 20,    // reset the filter after these many buffers
         minPitch = 50,          //minimum pitch in Hz
-        maxPitch = 2000,        //maximum pitch
+        maxPitch = 5000,        //maximum pitch
         nUpdate =  4            //update KF every nUpdate samples, must be a divisor of bufferSize
     };
     

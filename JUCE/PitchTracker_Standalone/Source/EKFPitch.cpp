@@ -59,7 +59,7 @@ than neighbouring samples). Then, to pick the fundamental, we find
 the first local peak that exceeds a threshold. The threshold is half
 the maximum peak value*/
 
-void EKFPitch::findInitialPitch(const float* channelData){
+void EKFPitch::findInitialPitchFFT(const float* channelData){
     
     
     //fftData needs to be twice the size of the input buffer,
@@ -79,33 +79,50 @@ void EKFPitch::findInitialPitch(const float* channelData){
                                                juce::dsp::WindowingFunction<float>::hann);
     window.multiplyWithWindowingTable(fftData, fftSize);
     
+    //do a complex FFT, this needs complex input and output vectors
+    std::complex <float> complexFFTData[fftSize];
+    for(int i = 0; i < fftSize; i++){
+        complexFFTData[i].real(fftData[i]);
+        complexFFTData[i].imag(0.0f);
+    }
     
+   
     //calculate FFT
-    juce::dsp::FFT forwardFFT(log2(fftSize)-1);     //has to be half of FFT size
+    std::complex <float> fftOutput[fftSize];
+    juce::dsp::FFT forwardFFT(log2(fftSize));     //has to be half of FFT size
     //don't calculate negative frequencies
-    forwardFFT.performRealOnlyForwardTransform(fftData, true);
+    forwardFFT.perform(complexFFTData, fftOutput, false);
+    
+    
+    //make magnitude and phase vectors separately
+    float fftMag[fftSize/2]; float fftAng[fftSize/2];
+    //look at first half of data only, since it is symmetric
+    for(int i = 0; i < fftSize/2; i++){
+        fftMag[i] = std::abs(fftOutput[i]);
+        fftAng[i] = std::arg(fftOutput[i]);
+    }
     
     
     //multiply with exponential window to reduce magnitude of harmonics
-    int alpha = 5;
-    for (int i = 0; i < fftSize; i++)
-        fftData[i] *= exp(-0.5*alpha*i/(fftSize-1));
+    /*int alpha = 3;
+    for (int i = 0; i < fftSize/2; i++)
+        fftMag[i] *= exp(-0.5*alpha*i/(fftSize-1));*/
     
     
     //get dB magnitude of FFT vector
-    float dbFFT[fftSize];
-    for(int i = 0; i < fftSize; i++){
-        dbFFT[i] = juce::Decibels::gainToDecibels(fftData[i], negInf);
+    float dbFFT[fftSize/2];
+    for(int i = 0; i < fftSize/2; i++){
+        dbFFT[i] = juce::Decibels::gainToDecibels(fftMag[i], negInf);
     }
     
     
     //discard peaks below 50Hz
-    int start = 50*fftSize/((int)sampleRate/2);
+    int start = 50*fftSize/(int)sampleRate;
     
     
     //find max peak and set the threshold to its half
     float peakThreshold = negInf;
-    for (int i = start+1; i < fftSize; i++){
+    for (int i = start+1; i < fftSize/2; i++){
         if (dbFFT[i] > peakThreshold)
             peakThreshold = dbFFT[i];
     }
@@ -114,22 +131,22 @@ void EKFPitch::findInitialPitch(const float* channelData){
     
     // find local peaks
     std::pair<float, float> peak_interp;    //for parabolic interpolation around peak
-    for (int i = start+1; i < fftSize-1; i++){
+    for (int i = start+1; i < fftSize/2-1; i++){
         if ((dbFFT[i] > dbFFT[i-1]) && (dbFFT[i] > dbFFT[i+1]))
         {
             if(dbFFT[i] > peakThreshold){
                 peak_interp = parabolicInterpolation(dbFFT[i-1], dbFFT[i], dbFFT[i+1]);
                 f0 = (sampleRate/(float)fftSize) * ((float)i + peak_interp.first);
+                amp =  juce::Decibels::decibelsToGain(peak_interp.second)/fftSize;
+                phi = fftAng[i];
+                
                 std::cout << f0 << std::endl;
-                amp = peak_interp.second/fftSize;
-                phi = std::arg(fftData[i]);
                 return;
             }
         
         }
     }
 }
-
 
 
 //parabolic interpolation on FFT peak magnitude
@@ -151,8 +168,8 @@ void EKFPitch::resetCovarianceMatrix(){
           0,0,0;
     
     // initial state vector
-    x_ << std::exp(PI*2*I*f0*Ts), amp*std::exp(2*PI*I*f0*Ts+I*phi),
-        amp*std::exp(-2*PI*I*f0*Ts-I*phi);
+    x_ << std::exp(PI*2*I*f0*Ts), amp*std::exp(I*phi),
+        amp*std::exp(-I*phi);
 }
 
 
