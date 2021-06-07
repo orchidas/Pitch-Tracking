@@ -1,12 +1,12 @@
 /*
-  ==============================================================================
-
-    EKFPitch.h
-    Created: 4 Jun 2021 3:02:06pm
-    Author:  Orchisama Das
-
-  ==============================================================================
-*/
+ ==============================================================================
+ 
+ EKFPitch.h
+ Created: 4 Jun 2021 3:02:06pm
+ Author:  Orchisama Das
+ 
+ ==============================================================================
+ */
 
 #pragma once
 #include "JuceHeader.h"
@@ -15,7 +15,7 @@
 #include <cmath>
 
 class EKFPitch{
-
+    
 public:
     
     EKFPitch();
@@ -23,7 +23,7 @@ public:
     
     void prepare(float sampleRate, int bufferSize);         //initialize
     bool detectSilence(const float* channelData);           //detects if current buffer is silent
-    void findInitialPitchFFT(const float* channelData);     //initial pitch estimate by FFT peak detection
+    void findInitialPitch(const float* channelData);        //initial pitch estimate by FFT peak detection
     void resetCovarianceMatrix();                           // resent error covariance matrix and re-initialize                                                         filter
     float kalmanFilter(const float audioSample);             // EKF implementation
     std::pair<float, float> parabolicInterpolation(
@@ -32,13 +32,13 @@ public:
     float f0, phi, amp;     //instantaneous frequency, phase and amplitude
     int bufferSize;         //buffer size
     
-
-
+    
+    
     
 private:
     float sampleRate;                           //sample rate
     float Ts;                                   //inverse of sampleRate
-    const float threshold = -20.0f;             //energy threshold for detecting silence in dB
+    const float threshold = -40.0f;             //energy threshold for detecting silence in dB
     const float PI = std::acos(-1);             //pi
     const float negInf = -150.f;                //peak value at negative infinity
     int fftSize;                                //FFT size
@@ -64,6 +64,7 @@ private:
     
     float Q;                        //process noise
     float coeff;                    //adaptive process noise coefficient,
-                                    //determines smoothness of pitch trajectory
+    //determines smoothness of pitch trajectory
     
 };
+

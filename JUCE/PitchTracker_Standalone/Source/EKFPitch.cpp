@@ -1,12 +1,12 @@
 /*
-  ==============================================================================
-
-    EKFPitch.cpp
-    Created: 4 Jun 2021 3:02:06pm
-    Author:  Orchisama Das
-
-  ==============================================================================
-*/
+ ==============================================================================
+ 
+ EKFPitch.cpp
+ Created: 4 Jun 2021 3:02:06pm
+ Author:  Orchisama Das
+ 
+ ==============================================================================
+ */
 #include "EKFPitch.h"
 
 //Constructr
@@ -31,7 +31,7 @@ void EKFPitch::prepare(float fs, int bs){
     R.resize(1);   R << 1;                  //measurement noise
     Iden << Eigen::Matrix3cf::Identity();   //3x3 complex identity matrix
     H << 0,0.5,0.5;                         //observation matrix
-    coeff = 4;                              //adaptive process noise coefficient
+    coeff = 5;                              //adaptive process noise coefficient
     I.real(0); I.imag(1);                   // complex numner 0 + 1i
     unity.real(1); unity.imag(0);           //complex number 1 + 0i
 }
@@ -54,12 +54,12 @@ bool EKFPitch::detectSilence(const float* channelData){
 
 
 /*initial pitch estimate by FFT peak detection, We do this by first
-looking for all local peaks in the magnitude spectrum (values greater
-than neighbouring samples). Then, to pick the fundamental, we find
-the first local peak that exceeds a threshold. The threshold is half
-the maximum peak value*/
+ looking for all local peaks in the magnitude spectrum (values greater
+ than neighbouring samples). Then, to pick the fundamental, we find
+ the first local peak that exceeds a threshold. The threshold is half
+ the maximum peak value*/
 
-void EKFPitch::findInitialPitchFFT(const float* channelData){
+void EKFPitch::findInitialPitch(const float* channelData){
     
     
     //fftData needs to be twice the size of the input buffer,
@@ -72,7 +72,7 @@ void EKFPitch::findInitialPitchFFT(const float* channelData){
         else
             fftData[i] = 0.0f;
     }
-
+    
     
     //window the data
     juce::dsp::WindowingFunction<float> window(fftSize,
@@ -86,11 +86,10 @@ void EKFPitch::findInitialPitchFFT(const float* channelData){
         complexFFTData[i].imag(0.0f);
     }
     
-   
-    //calculate FFT
+    
+    //calculate complex FFT
     std::complex <float> fftOutput[fftSize];
-    juce::dsp::FFT forwardFFT(log2(fftSize));     //has to be half of FFT size
-    //don't calculate negative frequencies
+    juce::dsp::FFT forwardFFT(log2(fftSize));
     forwardFFT.perform(complexFFTData, fftOutput, false);
     
     
@@ -105,8 +104,8 @@ void EKFPitch::findInitialPitchFFT(const float* channelData){
     
     //multiply with exponential window to reduce magnitude of harmonics
     /*int alpha = 3;
-    for (int i = 0; i < fftSize/2; i++)
-        fftMag[i] *= exp(-0.5*alpha*i/(fftSize-1));*/
+     for (int i = 0; i < fftSize/2; i++)
+     fftMag[i] *= exp(-0.5*alpha*i/(fftSize-1));*/
     
     
     //get dB magnitude of FFT vector
@@ -129,8 +128,9 @@ void EKFPitch::findInitialPitchFFT(const float* channelData){
     peakThreshold *= 0.5;
     
     
-    // find local peaks
-    std::pair<float, float> peak_interp;    //for parabolic interpolation around peak
+    // find first peak in FFT
+    //for parabolic interpolation around peak
+    std::pair<float, float> peak_interp;
     for (int i = start+1; i < fftSize/2-1; i++){
         if ((dbFFT[i] > dbFFT[i-1]) && (dbFFT[i] > dbFFT[i+1]))
         {
@@ -143,10 +143,12 @@ void EKFPitch::findInitialPitchFFT(const float* channelData){
                 std::cout << f0 << std::endl;
                 return;
             }
-        
+            
         }
     }
 }
+
+
 
 
 //parabolic interpolation on FFT peak magnitude
@@ -164,36 +166,36 @@ void EKFPitch::resetCovarianceMatrix(){
     
     // covariance matrix is just a bunch of zeros
     P_ << 0,0,0,
-          0,0,0,
-          0,0,0;
+    0,0,0,
+    0,0,0;
     
     // initial state vector
-    x_ << std::exp(PI*2*I*f0*Ts), amp*std::exp(I*phi),
-        amp*std::exp(-I*phi);
+    x_ << std::exp(PI*2*I*f0*Ts), amp*std::exp(2*PI*I*f0*Ts+I*phi),
+    amp*std::exp(-2*PI*I*f0*Ts-I*phi);
 }
 
 
 /*ECKF pitch tracker implementation, takes the current audio
-sample as input and returns the estimated pitch. This is a
-sanoke-synchronous pitch tracker. For more information, see
-O. Das et al. "Real-time pitch tracking in audio signals with
-the Extended Complex Kalman Filter" - DAFx 2017.*/
+ sample as input and returns the estimated pitch. This is a
+ sanoke-synchronous pitch tracker. For more information, see
+ O. Das et al. "Real-time pitch tracking in audio signals with
+ the Extended Complex Kalman Filter" - DAFx 2017.*/
 
 float EKFPitch::kalmanFilter(const float audioSample){
     
     //input data must be converted to Eigen's complex vector
-    input << audioSample;    
+    input << audioSample;
     //Kalman filter update
     K = (P_*H.adjoint()) * (H*P_*H.adjoint()+R).inverse();
     P = P_ - K*H*P_;
     x = x_ + K*(input - H*x_);
     x_next << x(0), x(0)*x(1), x(2)/x(0);
     F << 1,0,0,
-        x(1),x(0),0,
-        -x(2)/(x(0)*x(0)),0, unity/x(0);
+    x(1),x(0),0,
+    -x(2)/(x(0)*x(0)),0, unity/x(0);
     D = input - H*x;
     Q = pow(10,-(coeff-std::abs(D(0))));
-            
+    
     P_next = F*P*F.adjoint() + Q*Iden;
     f0 = std::abs(std::log(x(0))/(PI*2*I*Ts));
     
@@ -203,3 +205,4 @@ float EKFPitch::kalmanFilter(const float audioSample){
     
     return f0;
 }
+

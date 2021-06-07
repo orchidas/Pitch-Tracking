@@ -77,7 +77,7 @@ void MainComponent::getNextAudioBlock (const juce::AudioSourceChannelInfo& buffe
             if ((prevBufferSilent && !curBufferSilent)
                 || ((nBuffer >= nBufferToReset) && !curBufferSilent))
             {
-                ekf.findInitialPitchFFT(channelData);
+                ekf.findInitialPitch(channelData);
                 ekf.resetCovarianceMatrix();
                 nBuffer = 0;
                 //std::cout << "Kalman filter reset" << std::endl;

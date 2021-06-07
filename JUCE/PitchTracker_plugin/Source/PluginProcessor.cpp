@@ -22,11 +22,6 @@ NewProjectAudioProcessor::NewProjectAudioProcessor()
                        )
 #endif
 {
-    //make sure pitch starts at 0
-    for(int i = 0; i < pitchSize; i ++){
-        pitch[i] = 0.0f;
-    }
-    
 }
 
 NewProjectAudioProcessor::~NewProjectAudioProcessor()

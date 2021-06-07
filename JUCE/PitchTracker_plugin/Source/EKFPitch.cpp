@@ -87,10 +87,9 @@ void EKFPitch::findInitialPitch(const float* channelData){
     }
     
     
-    //calculate FFT
+    //calculate complex FFT
     std::complex <float> fftOutput[fftSize];
-    juce::dsp::FFT forwardFFT(log2(fftSize));     //has to be half of FFT size
-    //don't calculate negative frequencies
+    juce::dsp::FFT forwardFFT(log2(fftSize));
     forwardFFT.perform(complexFFTData, fftOutput, false);
     
     
@@ -129,8 +128,9 @@ void EKFPitch::findInitialPitch(const float* channelData){
     peakThreshold *= 0.5;
     
     
-    // find local peaks
-    std::pair<float, float> peak_interp;    //for parabolic interpolation around peak
+    // find first peak in FFT
+    //for parabolic interpolation around peak
+    std::pair<float, float> peak_interp;
     for (int i = start+1; i < fftSize/2-1; i++){
         if ((dbFFT[i] > dbFFT[i-1]) && (dbFFT[i] > dbFFT[i+1]))
         {
