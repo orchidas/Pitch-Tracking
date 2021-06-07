@@ -31,8 +31,12 @@ public:
     
     enum
     {
-        scopeSize = 512,      //size of data to be displayed
-        nBufferToReset = 20   // reset the filter after these many buffers
+        pitchSize = 128,        //size of pitch to be stored
+        scopeSize = 8192,      //size of data to be displayed
+        nBufferToReset =50,    // reset the filter after these many buffers
+        minPitch = 50,          //minimum pitch in Hz
+        maxPitch = 2000,        //maximum pitch
+        nUpdate =  4            //update KF every nUpdate samples, must be a divisor of bufferSize
     };
     
 
@@ -47,7 +51,7 @@ private:
     int nBuffer;                //keep track of buffers
     
     bool nextPitchBlockReady = false;       //is next block ready for display?
-    float pitch [scopeSize];                //pitch values to be stored
+    float pitch [pitchSize];                //pitch values to be stored
     float scopeData [scopeSize];            //data that is plotted
     float sampleRate;
 

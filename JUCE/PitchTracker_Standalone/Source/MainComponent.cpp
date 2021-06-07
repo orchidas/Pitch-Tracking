@@ -8,7 +8,7 @@ MainComponent::MainComponent()
     for(int i = 0; i < scopeSize; i++)
         scopeData[i] = 0.0f;
     
-    startTimer(10);    //timerCallback every 100ms
+    startTimer(50);    //timerCallback every 100ms
     setSize (800, 600);
 
     // Some platforms require permissions to open input channels so request that here
@@ -46,7 +46,7 @@ void MainComponent::prepareToPlay (int samplesPerBlockExpected, double sampleRat
     ekf.prepare(this->sampleRate, samplesPerBlockExpected);     //prepare pitch tracker
     prevBufferSilent = true;                                    //set buffer flag
     nBuffer = 0;
-    for(int i = 0; i < scopeSize; i++){
+    for(int i = 0; i < pitchSize; i++){
         pitch[i] = 0.0f;                                //make sure initial pitch values are not garbage
     }
 }
@@ -65,6 +65,7 @@ void MainComponent::getNextAudioBlock (const juce::AudioSourceChannelInfo& buffe
     for (int channel = 0; channel < numInputChannels; ++channel)
     {
         const float* channelData = bufferToFill.buffer->getReadPointer(0, bufferToFill.startSample);
+        float f0;
         
         //we are dealing with single channel data here for pitch detection
         if (channel == 0){
@@ -73,31 +74,38 @@ void MainComponent::getNextAudioBlock (const juce::AudioSourceChannelInfo& buffe
             curBufferSilent = ekf.detectSilence(channelData);
             
             //if there is an onset, reset the filter
-            if ((prevBufferSilent && !curBufferSilent) || nBuffer == nBufferToReset){
+            if ((prevBufferSilent && !curBufferSilent)
+                || ((nBuffer >= nBufferToReset) && !curBufferSilent))
+            {
                 ekf.findInitialPitch(channelData);
                 ekf.resetCovarianceMatrix();
                 nBuffer = 0;
                 std::cout << "Kalman filter reset" << std::endl;
-
             }
             
+            if (curBufferSilent)
+                std::cout << "silent buffer" << std::endl;
+            else
+                std::cout << "not silent" << std::endl;
                 
-            //update the pitch every 10 samples, otherwise too slow
-            for (int i = 0; i < numSamples; i+=10)
+            //update the pitch every uUpdate samples, otherwise too slow
+            for (int i = 0; i < numSamples; i+=nUpdate)
             {
-                if (pitchIndex == scopeSize){
+                if (pitchIndex >= pitchSize){
                     pitchIndex = 0;
                     nextPitchBlockReady = true;
                 }
-                if (!curBufferSilent)
-                    pitch[pitchIndex++]= ekf.kalmanFilter(channelData[i]);
-                else
+                if (curBufferSilent){
                     pitch[pitchIndex++] = 0.0f;
-                
-                std::cout << pitch[pitchIndex] << std::endl;
+                }
+                else{
+                    f0 = ekf.kalmanFilter(channelData[i]);
+                    pitch[pitchIndex++] = f0 < minPitch? 0.0f : f0;
+                }
+                //std::cout << pitch[pitchIndex] << std::endl;
+
             }
             nBuffer++;
-            
             
             prevBufferSilent = curBufferSilent;
         }
@@ -123,8 +131,8 @@ void MainComponent::releaseResources()
 
 //==============================================================================
 void MainComponent::timerCallback(){
-    if (nextPitchBlockReady)
-    {
+    if (nextPitchBlockReady){
+        //std::cout << "Next block ready to print" << std::endl;
         drawNextFrame();
         nextPitchBlockReady = false;
         repaint();
@@ -134,11 +142,19 @@ void MainComponent::timerCallback(){
 void MainComponent::drawNextFrame() {
     
     
-    for (int i = 0; i < scopeSize; ++i)
+    for (int i = scopeSize-1; i >= 0; i--)
     {
-        //pitch wont exceed half of sample Rate
-        float constrainedPitch = juce::jlimit<float>(0.0f, sampleRate/2.0, pitch[i]);
-        scopeData[i] = constrainedPitch/(sampleRate/2.0);
+        //shift existing samples to the right
+        if (i >= pitchSize)
+            scopeData[i]  = scopeData[i-pitchSize];
+        else{
+            //fill the first half with new pitch samples
+            //pitch wont exceed half of sample Rate
+            float constrainedPitch = juce::jlimit<float>(0.0f, sampleRate/2.0, pitch[i]);
+            scopeData[i] = constrainedPitch/(sampleRate/2.0);
+            scopeData[i] = constrainedPitch;
+
+        }
     }
 }
 
@@ -162,16 +178,16 @@ void MainComponent::paint (juce::Graphics& g)
         g.drawLine ({
             
             //plotting on linear scale
-            /*(float) juce::jmap (i - 1, 0, scopeSize - 1, 0, width),
+            (float) juce::jmap (i - 1, 0, scopeSize - 1, 0, width),
             juce::jmap (scopeData[i-1], 0.0f, (float)maxPitch, (float) height, 0.0f),
             (float) juce::jmap (i, 0, scopeSize - 1, 0, width),
-            juce::jmap (scopeData[i], 0.0f, (float)maxPitch, (float) height, 0.0f)*/
+            juce::jmap (scopeData[i], 0.0f, (float)maxPitch, (float) height, 0.0f)
             
              //normalize pitch values and plot on log scale
-             (float) juce::jmap (i - 1, 0, scopeSize - 1, 0, width),
+             /*(float) juce::jmap (i - 1, 0, scopeSize - 1, 0, width),
              juce::mapToLog10 (scopeData[i-1], (float) height, 1.0f),
              (float) juce::jmap (i, 0, scopeSize - 1, 0, width),
-             juce::mapToLog10 (scopeData[i], (float) height, 1.0f)
+             juce::mapToLog10 (scopeData[i], (float) height, 1.0f)*/
         });
     }
 }

@@ -28,10 +28,10 @@ void EKFPitch::prepare(float fs, int bs){
     
     //define constants
     input.resize(1);                        //this should be a single element vector
-    R.resize(1);   R << 1.0;                //measurement noise
+    R.resize(1);   R << 1;                  //measurement noise
     Iden << Eigen::Matrix3cf::Identity();   //3x3 complex identity matrix
     H << 0,0.5,0.5;                         //observation matrix
-    coeff = 8;                              //adaptive process noise coefficient
+    coeff = 4;                              //adaptive process noise coefficient
     I.real(0); I.imag(1);                   // complex numner 0 + 1i
     unity.real(1); unity.imag(0);           //complex number 1 + 0i
 }
@@ -87,7 +87,7 @@ void EKFPitch::findInitialPitch(const float* channelData){
     
     
     //multiply with exponential window to reduce magnitude of harmonics
-    int alpha = 10;
+    int alpha = 5;
     for (int i = 0; i < fftSize; i++)
         fftData[i] *= exp(-0.5*alpha*i/(fftSize-1));
     
@@ -119,8 +119,9 @@ void EKFPitch::findInitialPitch(const float* channelData){
         {
             if(dbFFT[i] > peakThreshold){
                 peak_interp = parabolicInterpolation(dbFFT[i-1], dbFFT[i], dbFFT[i+1]);
-                f0 = (sampleRate/(2.0*(float)fftSize)) * ((float)i + peak_interp.first);
-                amp = std::abs(fftData[i]);
+                f0 = (sampleRate/(float)fftSize) * ((float)i + peak_interp.first);
+                std::cout << f0 << std::endl;
+                amp = peak_interp.second/fftSize;
                 phi = std::arg(fftData[i]);
                 return;
             }
@@ -150,8 +151,8 @@ void EKFPitch::resetCovarianceMatrix(){
           0,0,0;
     
     // initial state vector
-    x_ << std::exp(PI*2*I*f0*Ts), amp*std::exp(I*phi),
-        amp*std::exp(-I*phi);
+    x_ << std::exp(PI*2*I*f0*Ts), amp*std::exp(2*PI*I*f0*Ts+I*phi),
+        amp*std::exp(-2*PI*I*f0*Ts-I*phi);
 }
 
 

@@ -38,7 +38,7 @@ public:
 private:
     float sampleRate;                           //sample rate
     float Ts;                                   //inverse of sampleRate
-    const float threshold = -40.0f;             //energy threshold for detecting silence
+    const float threshold = -20.0f;             //energy threshold for detecting silence in dB
     const float PI = std::acos(-1);             //pi
     const float negInf = -150.f;                //peak value at negative infinity
     int fftSize;                                //FFT size
