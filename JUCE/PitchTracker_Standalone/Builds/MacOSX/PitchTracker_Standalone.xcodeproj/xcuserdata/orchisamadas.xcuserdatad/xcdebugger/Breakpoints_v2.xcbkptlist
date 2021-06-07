@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../../Source/MainComponent.cpp"
-            timestampString = "644684784.912551"
+            timestampString = "644759661.849628"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "100"
-            endingLineNumber = "100"
+            startingLineNumber = "107"
+            endingLineNumber = "107"
             landmarkName = "MainComponent::getNextAudioBlock (const juce::AudioSourceChannelInfo&amp; bufferToFill)"
             landmarkType = "7">
          </BreakpointContent>
@@ -26,12 +26,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../../Source/EKFPitch.cpp"
-            timestampString = "644684784.912619"
+            timestampString = "644759661.849736"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "91"
             endingLineNumber = "91"
-            landmarkName = "EKFPitch::findInitialPitch(float* channelData)"
+            landmarkName = "EKFPitch::findInitialPitch(const float* channelData)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -42,12 +42,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../../Source/EKFPitch.cpp"
-            timestampString = "644684784.912671"
+            timestampString = "644759661.8498009"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "96"
             endingLineNumber = "96"
-            landmarkName = "EKFPitch::findInitialPitch(float* channelData)"
+            landmarkName = "EKFPitch::findInitialPitch(const float* channelData)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -58,12 +58,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../../Source/EKFPitch.cpp"
-            timestampString = "644684784.912716"
+            timestampString = "644759661.849856"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "104"
             endingLineNumber = "104"
-            landmarkName = "EKFPitch::findInitialPitch(float* channelData)"
+            landmarkName = "EKFPitch::findInitialPitch(const float* channelData)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -74,12 +74,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../../Source/EKFPitch.cpp"
-            timestampString = "644684784.91276"
+            timestampString = "644759661.849911"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "108"
             endingLineNumber = "108"
-            landmarkName = "EKFPitch::findInitialPitch(float* channelData)"
+            landmarkName = "EKFPitch::findInitialPitch(const float* channelData)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -90,12 +90,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../../Source/EKFPitch.cpp"
-            timestampString = "644684784.9128031"
+            timestampString = "644759661.849966"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "126"
-            endingLineNumber = "126"
-            landmarkName = "EKFPitch::findInitialPitch(float* channelData)"
+            startingLineNumber = "127"
+            endingLineNumber = "127"
+            landmarkName = "EKFPitch::findInitialPitch(const float* channelData)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -106,12 +106,28 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../../Source/EKFPitch.cpp"
-            timestampString = "644684784.912845"
+            timestampString = "644759661.8500201"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "109"
             endingLineNumber = "109"
-            landmarkName = "EKFPitch::findInitialPitch(float* channelData)"
+            landmarkName = "EKFPitch::findInitialPitch(const float* channelData)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../Source/EKFPitch.cpp"
+            timestampString = "644759661.850073"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "126"
+            endingLineNumber = "126"
+            landmarkName = "EKFPitch::findInitialPitch(const float* channelData)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
