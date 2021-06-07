@@ -17,9 +17,8 @@
 
 
 <h2> Update, June 2021 </h2>
-<p>A JUCE application implementing the EKF pitch tracker from the DAFx 2017 paper with very basic plotting has now been added. The only external library used is <a href = "https://eigen.tuxfamily.org/index.php?title=Main_Page">Eigen</a> for implementing the Kalman filter. 
- 
- TO-DO - Make a plugin
- 
+
+<p>A JUCE application + AU plugin implementing the EKF pitch tracker from the DAFx 2017 paper with very basic plotting has now been added. The only external library used is <a href = "https://eigen.tuxfamily.org/index.php?title=Main_Page">Eigen</a> for implementing the Kalman filter. The plugin works on MacOS so far. VST support needs to be added.
+  
  </p>
 
