@@ -31,7 +31,7 @@ void EKFPitch::prepare(float fs, int bs){
     R.resize(1);   R << 1;                  //measurement noise
     Iden << Eigen::Matrix3cf::Identity();   //3x3 complex identity matrix
     H << 0,0.5,0.5;                         //observation matrix
-    coeff = 5;                              //adaptive process noise coefficient
+    coeff = 7;                              //adaptive process noise coefficient
     I.real(0); I.imag(1);                   // complex numner 0 + 1i
     unity.real(1); unity.imag(0);           //complex number 1 + 0i
 }
