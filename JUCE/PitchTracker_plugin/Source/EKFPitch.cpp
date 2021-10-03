@@ -177,7 +177,7 @@ void EKFPitch::resetCovarianceMatrix(){
 
 /*ECKF pitch tracker implementation, takes the current audio
  sample as input and returns the estimated pitch. This is a
- sanoke-synchronous pitch tracker. For more information, see
+ sample-synchronous pitch tracker. For more information, see
  O. Das et al. "Real-time pitch tracking in audio signals with
  the Extended Complex Kalman Filter" - DAFx 2017.*/
 
