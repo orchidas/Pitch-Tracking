@@ -44,8 +44,8 @@ hold off;
 xlabel('Time');ylabel('Estimated f0 (Hz)');
 ylim([0,yL]);
 xlim([0,time(end)+0.2]);
-% legend('yin','crepe','ekf');
+legend('yin','crepe','ekf');
 set(gca, 'FontUnits','points', 'FontWeight','normal', 'FontSize',8, 'FontName','Times');
-% print(strcat('../figures/',filename(1:end-4),'_crepe.eps'), '-depsc');
+print(strcat('../figures/',filename(1:end-4),'_crepe.eps'), '-depsc');
 
 

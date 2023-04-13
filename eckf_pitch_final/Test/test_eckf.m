@@ -2,22 +2,7 @@
 close all; clear all; clc;
 
 %test with actual audio signal
-%parentpath = '/home/orchisama/Documents/Research/pitch_tracking';
 parentpath = '/Users/orchisamadas/Documents/Research/pitch_tracking';
-
-%test with concatenated cell notes
-% soundpath = strcat(parentpath,'/Cello.arco.ff.sulC.stereo/');
-% filename = 'Cello.arco.ff.sulC.';
-% %sound = {'A3.stereo.aif', 'C3.stereo.aif','D3.stereo.aif','G3.stereo.aif'};
-% sound = {'A3.stereo.aif', 'Bb3.stereo.aif','E3.stereo.aif','G3.stereo.aif'};
-% 
-% snd = [];
-% len = [];
-% for n = 1:length(sound)
-%     [x,fs] = audioread(strcat(soundpath, filename, sound{n}));
-%     len(n) = length(x);
-%     snd = [snd;x(:,1)];
-% end
 
 % %test with guitar recordings from Mark
 soundpath = strcat(parentpath, '/GuitarNotes/');
@@ -52,9 +37,6 @@ if(iscolumn(snd) == 1)
     snd = snd';
 end
 snd = snd-mean(snd);
-
-%ground truth frequency labels
-%f = [220*ones(1,len(1)), 233.08 * ones(1,len(2)), 164.81 * ones(1,len(3)), 196 * ones(1,len(4))];
 
 %kalman pitch tracker - double bass
 % [f0_est,amp,phi,x_est,onset_pos] = eckf_pitch_modified(snd, fs, 2048, 11, 1, 6); %-descend
@@ -104,7 +86,7 @@ hold off;
 xlabel('Time');ylabel('Estimated f0 (Hz)');
 ylim([300,yL]);
 xlim([0,time(end)+0.2]);
-% legend('yin','crepe','ekf');
+legend('yin','crepe','ekf');
 set(gca, 'FontUnits','points', 'FontWeight','normal', 'FontSize',8, 'FontName','Times');
 print(strcat('../figures/',filename(1:end-4),'_crepe.eps'), '-depsc');
 
@@ -120,7 +102,7 @@ print(strcat('../figures/',filename(1:end-4),'_crepe.eps'), '-depsc');
 % subplot(212);
 % plot(time,real(x_est));grid on; title('Reconstructed fundamental');
 
-%myspecgram(snd,fs,8096,2048,2^15);hold on;
+% myspecgram(snd,fs,8096,2048,2^15);hold on;
 % xL = 3.68;
 % fig = figure('Units','inches', 'Position',[0 0 3.25 2.1],'PaperPositionMode','auto');
 % set(gca, 'FontUnits','points', 'FontWeight','normal', 'FontSize',8, 'FontName','Times');

@@ -33,13 +33,6 @@ for i = 1:length(snr)
     mse(i) = mean(abs(err));
     var(i) = std(err);
     
-%     figure(2);
-%     myspecgram(x,fs,2^13,2^10,2^15);hold on;
-%     plot(t,f0_corr,'k','LineWidth',1.2);hold on;
-%     plot(time_eckf,f0_est,'LineWidth',1.2);hold on;
-%     plot(time_yin, f0_yin,'r','Linewidth',1.2);hold off;
-%     ylim([200, 550]);
-%     pause;
 end
 
 figure;

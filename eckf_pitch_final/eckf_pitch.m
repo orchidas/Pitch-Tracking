@@ -1,6 +1,6 @@
 function [f0,amp,phase,x_est] = eckf_pitch(y,fs,c, numBufToWait)
 
-%pitch detector based on the extended complex kalman filter
+%Pitch tracker based on the extended complex kalman filter
 %y - incoming noisy signal (row vector) 
 %fs - sampling rate
 %f0 - estimated pitch
@@ -103,16 +103,6 @@ while(start + flength - 1 < length(y))
         x0 = [exp(1i*2*pi*f1*Ts);a1*exp(1i*2*pi*f1*n*Ts + 1i*phi1);...
             a1*exp(-1i*2*pi*f1*n*Ts - 1i*phi1)];
         P0 = 0;
-        
-        %uncomment to plot estimated states
-%         figure;
-%         set(gca, 'fontsize', 14);
-%         hold on
-%         subplot(211);plot(fbins, mag);grid on;hold on;
-%         plot(f1,a1*nfft,'k*');hold off;
-%         ylabel('Magnitude spectrum');xlabel('Frequency in Hz');
-%         subplot(212);plot(fbins,unwrap(phase));grid on;   
-%         ylabel('Phase spectrum');xlabel('Frequency in Hz');
 
         %reset covariance matrix
         if(abs(min(K)) < Kthres)
@@ -137,7 +127,7 @@ while(start + flength - 1 < length(y))
         %adaptive process noise based on error 
         Q(n) = 10^-(c-(abs(y_frame(k) - H*x)));
         P_next = F*P*F' + Q(n)*eye(3);
-        f0(n) = abs(log(x(1))/(1j*Ts*2*pi));
+        f0(n) = abs(log(x(1))/(1i*Ts*2*pi));
         amp(n) = abs(x(2));
         phase(n) = abs(-1i * (log(x(2)/amp(n))-(2*pi*f0(n)*Ts*n)));
         x_est(n) = H*x;

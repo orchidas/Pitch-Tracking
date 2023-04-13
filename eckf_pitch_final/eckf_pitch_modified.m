@@ -1,6 +1,7 @@
-function [f0,amp,phase,x_est,onset_pos] = eckf_pitch_modified(y, fs, blockSize, c, numBufToWait, npeaks, nsemitones)
+function [f0,amp,phase,x_est,onset_pos] = eckf_pitch_modified(y, fs, blockSize, c, numBufToWait, npeaks, nsemitones, plot_flag)
 
-%pitch detector based on the extended complex kalman filter
+%Pitch tracker based on the extended complex kalman filter
+%INPUTS:
 %y - incoming noisy signal (row vector) 
 %fs - sampling rate
 %f0 - estimated pitch
@@ -9,9 +10,12 @@ function [f0,amp,phase,x_est,onset_pos] = eckf_pitch_modified(y, fs, blockSize, 
 %from instrument to instrument, depending on how strong its attack is
 %nsemitones - number of semitones of pitch change to occur for a new note
 %to be detected
+%plot_flag - boolean to determine if results are to be plotted
+%OUTPUTS:
 %amp - estimated amplitude of fundamental
 %phi - estimated phase of fundamental
 %x_est - estimated fundamental component of signal
+%onset_pos - position of note onsets (in seconds)
 
 %steps
 %1. break signal into frames of 25 ms
@@ -23,6 +27,9 @@ function [f0,amp,phase,x_est,onset_pos] = eckf_pitch_modified(y, fs, blockSize, 
 
 if nargin < 7
     nsemitones = 2;
+    plot_flag = 0;
+elseif nargin < 8
+    plot_flag = 0;
 end
 
 nframes = ceil(length(y)/blockSize);
@@ -169,29 +176,31 @@ end
 
 %% for plotting
 
-% figure;
-% time = 0:1/fs:(length(y)-1)/fs;
-% yL = max(abs(y));
-% subplot(311);
-% plot(time, y);hold on;
-% for i = 1:length(onset_pos)
-%     line([onset_pos(i) onset_pos(i)]/fs,[-yL,yL],'Color','k','LineStyle','--');
-% end
-% title('Original signal');
-% subplot(312);
-% plot(time, P_track(1:length(y)));
-% title('Error covariance matrix');
-% subplot(313);
-% plot(time, K_track(1:length(y)));
-% title('Kalman gain');
+if plot_flag
+    figure;
+    time = 0:1/fs:(length(y)-1)/fs;
+    yL = max(abs(y));
+    subplot(311);
+    plot(time, y);hold on;
+    for i = 1:length(onset_pos)
+        line([onset_pos(i) onset_pos(i)]/fs,[-yL,yL],'Color','k','LineStyle','--');
+    end
+    title('Original signal');
+    subplot(312);
+    plot(time, P_track(1:length(y)));
+    title('Error covariance matrix');
+    subplot(313);
+    plot(time, K_track(1:length(y)));
+    title('Kalman gain');
 
-% fig = figure('Units','inches', 'Position',[0 0 3.25 2.1],'PaperPositionMode','auto');
-% set(gca, 'FontUnits','points', 'FontWeight','normal', 'FontSize',8, 'FontName','Times');
-% plot(1:length(spf), spf);grid on;
-% xlim([1,length(spf)]);
-% ylabel('Spectral flatness');
-% xlabel('Frame number');
-% set(gca, 'FontUnits','points', 'FontWeight','normal', 'FontSize',8, 'FontName','Times');
+    fig = figure('Units','inches', 'Position',[0 0 3.25 2.1],'PaperPositionMode','auto');
+    set(gca, 'FontUnits','points', 'FontWeight','normal', 'FontSize',8, 'FontName','Times');
+    plot(1:length(spf), spf);grid on;
+    xlim([1,length(spf)]);
+    ylabel('Spectral flatness');
+    xlabel('Frame number');
+    set(gca, 'FontUnits','points', 'FontWeight','normal', 'FontSize',8, 'FontName','Times');
+end
 
 end
 
