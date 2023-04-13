@@ -90,27 +90,25 @@ legend('yin','crepe','ekf');
 set(gca, 'FontUnits','points', 'FontWeight','normal', 'FontSize',8, 'FontName','Times');
 print(strcat('../figures/',filename(1:end-4),'_crepe.eps'), '-depsc');
 
-% figure;
-% subplot(121);plot(time, amp);grid on; 
-% xlabel('Time');ylabel('Estimated amplitude');
-% subplot(122);plot(time,(phi));grid on;
-% xlabel('Time');ylabel('Estimated phase in radians (unwrapped)');
+figure;
+subplot(121);plot(time, amp);grid on; 
+xlabel('Time');ylabel('Estimated amplitude');
+subplot(122);plot(time,(phi));grid on;
+xlabel('Time');ylabel('Estimated phase in radians (unwrapped)');
 
-% figure;
-% subplot(211);
-% plot(t, snd); grid on; title('Original signal');
-% subplot(212);
-% plot(time,real(x_est));grid on; title('Reconstructed fundamental');
+figure;
+subplot(211);
+plot(t, snd); grid on; title('Original signal');
+subplot(212);
+plot(time,real(x_est));grid on; title('Reconstructed fundamental');
 
-% myspecgram(snd,fs,8096,2048,2^15);hold on;
-% xL = 3.68;
-% fig = figure('Units','inches', 'Position',[0 0 3.25 2.1],'PaperPositionMode','auto');
-% set(gca, 'FontUnits','points', 'FontWeight','normal', 'FontSize',8, 'FontName','Times');
-% myspecgram(snd,fs,2^13,2^10,2^15);hold on;
-% plot(time,f0_est,'k','LineWidth',1.2);hold off;
-% ylim([0,yL]);
-% xlim([0,xL]);
-% set(gca, 'FontUnits','points', 'FontWeight','normal', 'FontSize',8, 'FontName','Times');
-% print(strcat('../figures/',filename(1:end-4),'_spectrogram.eps'), '-depsc');
-
-
+myspecgram(snd,fs,8096,2048,2^15);hold on;
+xL = 3.68;
+fig = figure('Units','inches', 'Position',[0 0 3.25 2.1],'PaperPositionMode','auto');
+set(gca, 'FontUnits','points', 'FontWeight','normal', 'FontSize',8, 'FontName','Times');
+myspecgram(snd,fs,2^13,2^10,2^15);hold on;
+plot(time,f0_est,'k','LineWidth',1.2);hold off;
+ylim([0,yL]);
+xlim([0,xL]);
+set(gca, 'FontUnits','points', 'FontWeight','normal', 'FontSize',8, 'FontName','Times');
+print(strcat('../figures/',filename(1:end-4),'_spectrogram.eps'), '-depsc');
