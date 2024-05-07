@@ -45,12 +45,7 @@ if(~isempty(n))
             silent_indices = min(elems):N;
         end
     end
-% 
-%     figure;
-%     plot(x,'b');hold on;
-%     plot(env,'r');hold on;
-%     plot(silent_indices,env(silent_indices),'k*');hold off;
-%     grid on;
+
 end
 
 end

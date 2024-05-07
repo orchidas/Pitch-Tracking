@@ -58,11 +58,6 @@ if ~isempty(xprev)
     [n,c] = hist(abs(diff(fpeaks_cur) - diff(fpeaks_prev)),100);
     [mx,ix]=max(n,[],'omitnan'); %find mode of histogram
     cent_dev = 1200*log2(f0_est/(f0_est+c(ix)));
-%     f0_cur = mode(round(diff(fpeaks_cur)));
-%     f0_prev = mode(round(diff(fpeaks_prev)));
-%     cent_dev = 1200*log2(f0_cur/f0_prev);
-%     cent_dev = 1200*log2(fpeaks_cur./fpeaks_prev);
-%     cent_dev = sqrt(mean(cent_dev.^2));
     
     %pitch deviation greater than a semitone
     if(abs(cent_dev) >= nsemitones*100) 

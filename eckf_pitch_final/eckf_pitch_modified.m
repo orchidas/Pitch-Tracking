@@ -126,15 +126,17 @@ while blocks <= nframes
             a1*exp(-1i*2*pi*f1*n*Ts - 1i*phi1)];
         P0 = 0;
                       
-        %uncomment to plot estimated states
-%         figure;
-%         set(gca, 'fontsize', 14);
-%         hold on
-%         subplot(211);plot(fbins, mag);grid on;hold on;
-%         plot(f1,a1*nfft,'k*');hold off;
-%         ylabel('Magnitude spectrum');xlabel('Frequency in Hz');
-%         subplot(212);plot(fbins,unwrap(phi));grid on;   
-%         ylabel('Phase spectrum');xlabel('Frequency in Hz');
+        % plot estimated states
+        if plot_flag
+            figure;
+            set(gca, 'fontsize', 14);
+            hold on
+            subplot(211);plot(fbins, mag);grid on;hold on;
+            plot(f1,a1*nfft,'k*');hold off;
+            ylabel('Magnitude spectrum');xlabel('Frequency in Hz');
+            subplot(212);plot(fbins,unwrap(phi));grid on;   
+            ylabel('Phase spectrum');xlabel('Frequency in Hz');
+        end
 
         %reset covariance matrix
         if(abs(min(K)) < Kthres)

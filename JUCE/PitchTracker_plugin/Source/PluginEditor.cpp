@@ -79,8 +79,8 @@ void NewProjectAudioProcessorEditor::paint (juce::Graphics& g)
         auto width  = getLocalBounds().getWidth();
         auto height = getLocalBounds().getHeight();
         
-        //Pitch values should fit within the height of the screen. Use jmap
-        //jmap (Type sourceValue, Type sourceRangeMin, Type sourceRangeMax,
+        // Pitch values should fit within the height of the screen. Use jmap
+        // jmap (Type sourceValue, Type sourceRangeMin, Type sourceRangeMax,
         // Type targetRangeMin, Type targetRangeMax)
         g.drawLine ({
             

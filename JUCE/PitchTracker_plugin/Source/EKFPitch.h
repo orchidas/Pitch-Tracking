@@ -34,7 +34,6 @@ public:
     
     
     
-    
 private:
     float sampleRate;                           //sample rate
     float Ts;                                   //inverse of sampleRate
@@ -65,6 +64,7 @@ private:
     float Q;                        //process noise
     float coeff;                    //adaptive process noise coefficient,
     //determines smoothness of pitch trajectory
+    
     
 };
 

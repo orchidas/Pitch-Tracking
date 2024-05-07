@@ -22,7 +22,7 @@ elseif(size(snd,1) == 2)
 end
 
 t = (0:length(snd)-1)/fs;
-%only required for spectrogram plotting
+% only required for spectrogram plotting
 % extra_t = round((3.68-t(end))*fs);
 % snd = [snd;zeros(extra_t,1)];
 % t = (0:length(snd)-1)/fs;
@@ -53,7 +53,7 @@ snd = snd-mean(snd);
 
 %guitar - ornaments
 % [f0_est,amp,phi,x_est,onset_pos] = eckf_pitch_modified(snd, fs, 1024, 9, 2, 3); %-hammer
-[f0_est,amp,phi,x_est,onset_pos] = eckf_pitch_modified(snd, fs, 2048, 9, 2, 2, 0.25); %-trill
+[f0_est, amp, phi, x_est, onset_pos] = eckf_pitch_modified(snd, fs, 2048, 9, 2, 2, 0.25); %-trill
 % [f0_est,amp,phi,x_est,onset_pos] = eckf_pitch_modified(snd, fs, 2048, 8, 2, 2); %-vibrato
 % [f0_est,amp,phi,x_est,onset_pos] = eckf_pitch_modified(snd, fs, 2048, 9, 2, 3); %-slide
 
@@ -71,16 +71,16 @@ time_crepe = crepe.time;
 f0_crepe = crepe.frequency;
 
 
-%% plot
+% plot pitches
 yL = 450;
 fig = figure('Units','inches', 'Position',[0 0 3.25 2.1],'PaperPositionMode','auto');
 set(gca, 'FontUnits','points', 'FontWeight','normal', 'FontSize',8, 'FontName','Times');
 plot(time_yin, f0_yin,'--','Linewidth',0.8);grid on;hold on;
 plot(time_crepe, f0_crepe,'.','Markersize',5);grid on;
 plot(time, f0_est,'k','Linewidth',0.6);grid on; hold on;
-% for i = 1:length(onset_pos)
-%     line([onset_pos(i) onset_pos(i)]/fs,[0,yL],'Color','k','LineStyle','--');
-% end
+for i = 1:length(onset_pos)
+    line([onset_pos(i) onset_pos(i)]/fs,[0,yL],'Color','k','LineStyle','--');
+end
 
 hold off;
 xlabel('Time');ylabel('Estimated f0 (Hz)');
@@ -90,6 +90,7 @@ legend('yin','crepe','ekf');
 set(gca, 'FontUnits','points', 'FontWeight','normal', 'FontSize',8, 'FontName','Times');
 print(strcat('../figures/',filename(1:end-4),'_crepe.eps'), '-depsc');
 
+% plot amplitude and phase estimates
 figure;
 subplot(121);plot(time, amp);grid on; 
 xlabel('Time');ylabel('Estimated amplitude');
@@ -102,6 +103,7 @@ plot(t, snd); grid on; title('Original signal');
 subplot(212);
 plot(time,real(x_est));grid on; title('Reconstructed fundamental');
 
+% plot spectrogram
 myspecgram(snd,fs,8096,2048,2^15);hold on;
 xL = 3.68;
 fig = figure('Units','inches', 'Position',[0 0 3.25 2.1],'PaperPositionMode','auto');
@@ -112,3 +114,5 @@ ylim([0,yL]);
 xlim([0,xL]);
 set(gca, 'FontUnits','points', 'FontWeight','normal', 'FontSize',8, 'FontName','Times');
 print(strcat('../figures/',filename(1:end-4),'_spectrogram.eps'), '-depsc');
+
+

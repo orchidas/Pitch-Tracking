@@ -34,6 +34,7 @@ void EKFPitch::prepare(float fs, int bs){
     coeff = 7;                              //adaptive process noise coefficient
     I.real(0); I.imag(1);                   // complex numner 0 + 1i
     unity.real(1); unity.imag(0);           //complex number 1 + 0i
+    
 }
 
 
@@ -147,8 +148,6 @@ void EKFPitch::findInitialPitch(const float* channelData){
         }
     }
 }
-
-
 
 
 //parabolic interpolation on FFT peak magnitude
