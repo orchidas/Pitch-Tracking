@@ -32,11 +32,13 @@ public:
     enum
     {
         pitchSize = 128,        //size of pitch to be stored
-        scopeSize = 8192,      //size of data to be displayed
+        scopeSize = 8192,       //size of data to be displayed
         nBufferToReset = 20,    // reset the filter after these many buffers
         minPitch = 50,          //minimum pitch in Hz
-        maxPitch = 5000,        //maximum pitch
-        nUpdate =  4            //update KF every nUpdate samples, must be a divisor of bufferSize
+        maxPitch = 9000,        //maximum pitch
+        nUpdate =  4,            //update KF every nUpdate samples, must be a divisor of bufferSize
+        initOctave = 3,           //start from A3
+        maxFreqToPlot = 3700      //for plotting purposes
     };
     
 
@@ -54,6 +56,9 @@ private:
     float pitch [pitchSize];                //pitch values to be stored
     float scopeData [scopeSize];            //data that is plotted
     float sampleRate;
+    int numNotesToPlot;
+    float fundamentalFrequency = 220;       //A3 in Hz
+    juce::String noteNames[12] = {"A", "Bb", "B", "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab"};
 
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainComponent)
