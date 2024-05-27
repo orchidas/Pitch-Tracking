@@ -62,6 +62,7 @@ public:
         nBufferToReset = 20,    // reset the filter after these many buffers
         nUpdate =  4,           //update KF every nUpdate samples, must be a divisor of bufferSize
         minPitch = 50           //minimum possible pitch in Hz
+        
     };
     
     bool nextPitchBlockReady = false;
@@ -74,7 +75,7 @@ private:
     bool curBufferSilent;       //flag to check if current buffer is silent
     int pitchIndex = 0;
     int nBuffer;                //keep track of buffers
-            
+    
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (NewProjectAudioProcessor)
 };

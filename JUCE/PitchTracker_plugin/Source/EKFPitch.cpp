@@ -141,7 +141,7 @@ void EKFPitch::findInitialPitch(const float* channelData){
                 amp =  juce::Decibels::decibelsToGain(peak_interp.second)/fftSize;
                 phi = fftAng[i];
                 
-                std::cout << f0 << std::endl;
+                //std::cout << f0 << std::endl;
                 return;
             }
             

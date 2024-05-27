@@ -96,7 +96,7 @@ void NewProjectAudioProcessor::prepareToPlay (double sampleRate, int samplesPerB
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
     ekf.prepare((float)sampleRate, samplesPerBlock);     //prepare pitch tracker
-    prevBufferSilent = true;                                    //set buffer flag
+    prevBufferSilent = true;                             //set buffer flag
     nBuffer = 0;
     for(int i = 0; i < pitchSize; i++){
         pitch[i] = 0.0f;                                //make sure initial pitch values are not garbage

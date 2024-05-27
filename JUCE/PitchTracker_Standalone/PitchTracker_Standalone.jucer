@@ -5,12 +5,14 @@
               jucerFormatVersion="1">
   <MAINGROUP id="qbCiQZ" name="PitchTracker_Standalone">
     <GROUP id="{5BFF271D-31EE-2CEF-DC9C-84C9B3F7EF25}" name="Source">
-      <FILE id="UYiDQl" name="EKFPitch.cpp" compile="1" resource="0" file="Source/EKFPitch.cpp"/>
-      <FILE id="VFJtvM" name="EKFPitch.h" compile="0" resource="0" file="Source/EKFPitch.h"/>
-      <FILE id="SvVUbs" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>
-      <FILE id="S73yXO" name="MainComponent.h" compile="0" resource="0" file="Source/MainComponent.h"/>
+      <FILE id="UYJcn3" name="EKFPitch.cpp" compile="1" resource="0" file="../PitchTracker_plugin/Source/EKFPitch.cpp"/>
+      <FILE id="F26kfe" name="EKFPitch.h" compile="0" resource="0" file="../PitchTracker_plugin/Source/EKFPitch.h"/>
+      <FILE id="SvVUbs" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"
+            xcodeResource="0"/>
+      <FILE id="S73yXO" name="MainComponent.h" compile="0" resource="0" file="Source/MainComponent.h"
+            xcodeResource="0"/>
       <FILE id="BQ0Icu" name="MainComponent.cpp" compile="1" resource="0"
-            file="Source/MainComponent.cpp"/>
+            file="Source/MainComponent.cpp" xcodeResource="0"/>
     </GROUP>
   </MAINGROUP>
   <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1"/>
