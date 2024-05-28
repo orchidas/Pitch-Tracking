@@ -2,7 +2,8 @@
 
 <JUCERPROJECT id="VyWu2O" name="PitchTracker" projectType="audioplug" useAppConfig="0"
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
-              pluginFormats="buildAU,buildVST3" companyName="orchi" pluginAUIsSandboxSafe="1">
+              pluginFormats="buildAU,buildAUv3,buildVST3" companyName="orchi"
+              pluginAUIsSandboxSafe="1">
   <MAINGROUP id="KI8tBi" name="PitchTracker">
     <GROUP id="{311228E2-E6B9-1827-CB35-1F433AC0BECD}" name="Source">
       <FILE id="o3kOwC" name="EKFPitch.cpp" compile="1" resource="0" file="Source/EKFPitch.cpp"/>

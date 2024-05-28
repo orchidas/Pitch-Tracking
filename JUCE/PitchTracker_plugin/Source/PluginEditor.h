@@ -23,9 +23,8 @@ public:
     enum
     {
         scopeSize = 8192,          // size of pitch data to be displayed
-        maxPitch = 9000,            //maximum possible pitch
-        initOctave = 3,           //start from A3
-        maxFreqToPlot = 3700      //for plotting purposes
+        maxPitch = 3700,           //maximum possible pitch
+        initOctave = 1,            //start from A3
     };
 
 
@@ -34,6 +33,8 @@ public:
     void resized() override;
     void timerCallback() override;
     void drawNextFrame();
+    inline float mapToEqualTemperament(float frequencyHz, float maxHeight);
+
     
 private:
     
@@ -43,7 +44,9 @@ private:
     float scopeData [scopeSize];    //data that is plotted
     float sampleRate;
     int numNotesToPlot;
-    float fundamentalFrequency = 220;       //A3 in Hz
+    float fundamentalFrequency = 55.0;       //A3 in Hz
+    float* noteFrequencyPixel;
+    float* noteFrequencyHz;
     juce::String noteNames[12] = {"A", "Bb", "B", "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab"};
             
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (NewProjectAudioProcessorEditor)

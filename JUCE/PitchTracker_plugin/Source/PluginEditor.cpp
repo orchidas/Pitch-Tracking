@@ -23,12 +23,34 @@ NewProjectAudioProcessorEditor::NewProjectAudioProcessorEditor (NewProjectAudioP
     startTimer(50);    //timerCallback every 100ms
     setSize (500, 700);
     sampleRate = (float)audioProcessor.getSampleRate();
+    
     //for plotting notes on y-axis
-    numNotesToPlot = int(std::round(std::log2(maxFreqToPlot / fundamentalFrequency) * 12));
+    auto height = getLocalBounds().getHeight();
+    numNotesToPlot = int(std::round(std::log2((float) maxPitch / fundamentalFrequency) * 12));
+    noteFrequencyPixel = new float[numNotesToPlot];
+    noteFrequencyHz = new float[numNotesToPlot];
+    for (int k = 0; k < numNotesToPlot; k++){
+        
+        //frequency of musical notes
+        noteFrequencyHz[k] = fundamentalFrequency * std::pow(2, (float)k / 12.0);
+        
+        //linear mapping
+        //noteFrequencyPixel[k] = juce::jmap (noteFrequencyHz[k], 0.0f, (float)maxPitch, (float)height, 0.0f);
+        
+        //log mapping for better visibility
+        //float normNoteFrequency = noteFrequencyHz[k]/((float) maxPitch);
+        //noteFrequencyPixel[k] = juce::mapToLog10 (normNoteFrequency, (float) height, 1.0f);
+        
+        //equal temperament mapping
+        noteFrequencyPixel[k] = height - mapToEqualTemperament(noteFrequencyHz[k], (float) height);
+    }
 }
 
 NewProjectAudioProcessorEditor::~NewProjectAudioProcessorEditor()
-{}
+{
+    delete [] noteFrequencyHz;
+    delete [] noteFrequencyPixel;
+}
 
 //==============================================================================
 
@@ -54,10 +76,22 @@ void NewProjectAudioProcessorEditor::drawNextFrame() {
             //fill the first half with new pitch samples
             //pitch wont exceed half of sample Rate
             float constrainedPitch = juce::jlimit<float>(0.0f, sampleRate/2.0, audioProcessor.pitch[i]);
-            scopeData[i] = constrainedPitch/(float)maxPitch;
-            //scopeData[i] = constrainedPitch;
+            //scopeData[i] = constrainedPitch/(float)maxPitch;
+            scopeData[i] = constrainedPitch;
             
         }
+    }
+}
+
+inline float NewProjectAudioProcessorEditor::mapToEqualTemperament(float frequencyHz, float maxHeight){
+    //maps a frequency in Hz to a vertical pixel position for drawing, such that
+    //consecutive notes occupy equal distances
+    
+    if (frequencyHz <= fundamentalFrequency)
+        return 0.0f;
+    else{
+        float numNotes = std::log2((float) maxPitch / fundamentalFrequency);
+        return std::log2(frequencyHz / fundamentalFrequency) * maxHeight / numNotes;
     }
 }
 
@@ -90,11 +124,18 @@ void NewProjectAudioProcessorEditor::paint (juce::Graphics& g)
             juce::jmap (scopeData[i], 0.0f, (float)maxPitch, (float) height, 0.0f)
              */
             
-            //normalize pitch values and plot on log scale
-             (float) juce::jmap (i - 1, 0, scopeSize - 1, 0, width),
+            
+             //normalize pitch values and plot on log scale
+             /* (float) juce::jmap (i - 1, 0, scopeSize - 1, 0, width),
              juce::mapToLog10 (scopeData[i-1], (float) height, 1.0f),
              (float) juce::jmap (i, 0, scopeSize - 1, 0, width),
-             juce::mapToLog10 (scopeData[i], (float) height, 1.0f)
+             juce::mapToLog10 (scopeData[i], (float) height, 1.0f)*/
+            
+            //plotting on an equal temperament scale
+            (float) juce::jmap (i - 1, 0, scopeSize - 1, 0, width),
+            height - mapToEqualTemperament(scopeData[i-1], (float) height),
+            (float) juce::jmap (i, 0, scopeSize - 1, 0, width),
+            height  - mapToEqualTemperament(scopeData[i], (float) height)
         });
         
     }
@@ -104,27 +145,19 @@ void NewProjectAudioProcessorEditor::paint (juce::Graphics& g)
     g.setOpacity(0.5f);
     
     for (int k = 0 ; k < numNotesToPlot; k++){
-        float noteFrequency = fundamentalFrequency * std::pow(2, (float)k / 12.0);
-        float normNoteFrequency = noteFrequency/((float) maxPitch);
-        
         //Point <float> (x, y)
-        juce::Line<float> line (juce::Point<float> (0, noteFrequency),
-                                    juce::Point<float> (scopeSize, noteFrequency));
+        juce::Line<float> line (juce::Point<float> (0, noteFrequencyHz[k]),
+                                    juce::Point<float> (scopeSize, noteFrequencyHz[k]));
+    
         
-        //linear mapping
-        //auto mappedNoteHeight = juce::jmap (noteFrequency, 0.0f, (float)maxPitch, (float)height, 0.0f);
-        
-        //log mapping for better visibility
-        auto mappedNoteHeight = juce::mapToLog10 (normNoteFrequency, (float) height, 1.0f);
-
         //draw horizontal line at note frequency
-        g.drawHorizontalLine(mappedNoteHeight, 0.0f, (float)scopeSize);
+        g.drawHorizontalLine(noteFrequencyPixel[k], 0.0f, (float)scopeSize);
         
         //write the note name also - note name + octave
         juce::String noteName = noteNames[k % 12] + (juce::String)(initOctave + (k / 12));
         
         //drawText(String text, int x, int y, int width, int height);
-        g.drawText(noteName, 10, mappedNoteHeight, 30, 10, juce::Justification::centred, false);
+        g.drawText(noteName, 10, noteFrequencyPixel[k], 30, 10, juce::Justification::centred, false);
         
     }
     
